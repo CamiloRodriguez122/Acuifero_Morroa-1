@@ -20,5 +20,11 @@ export default [
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
+  {
+    // Los archivos de configuración y los scripts corren en Node, no en el
+    // navegador: necesitan sus propios globales.
+    files: ['*.config.js', 'scripts/**/*.mjs'],
+    languageOptions: { globals: { ...globals.node } },
+  },
   prettier,
 ]

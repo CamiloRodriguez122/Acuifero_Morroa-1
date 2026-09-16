@@ -47,6 +47,19 @@ npm run datos    # regenera las capas GeoJSON de public/data/
 No requiere llaves de API ni variables de entorno: todas las teselas provienen de servicios
 públicos abiertos.
 
+## Despliegue
+
+**GitHub Pages.** El flujo `.github/workflows/pages.yml` compila y publica en cada push. Requiere
+activarlo una sola vez en *Settings → Pages → Source → GitHub Actions*; a partir de ahí el sitio
+queda en `https://<usuario>.github.io/Acuifero_Morroa/`.
+
+**Vercel.** Importar el repositorio en [vercel.com/new](https://vercel.com/new). La configuración
+de `vercel.json` (framework Vite, `dist` como salida) ya está lista y no hay variables de entorno
+que definir.
+
+El sitio funciona tanto en la raíz de un dominio como bajo un subdirectorio: `vite.config.js` lee
+`BASE_PATH` y el código pide sus datos con `import.meta.env.BASE_URL`.
+
 ## Arquitectura
 
 | Capa | Tecnología |

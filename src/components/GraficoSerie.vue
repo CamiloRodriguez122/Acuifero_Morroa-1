@@ -13,28 +13,27 @@ const ANCHO = 320
 const MARGEN = { arriba: 8, derecha: 6, abajo: 18, izquierda: 34 }
 
 /**
- * La serie llega como [['AAAA-MM', nivel], ...]. El eje Y se invierte porque un
- * nivel estático mayor significa agua más profunda, es decir, peor condición.
+ * El eje Y se invierte respecto a lo habitual: un nivel estático mayor significa
+ * agua más profunda, es decir, peor condición del acuífero.
  */
 const grafico = computed(() => {
   const niveles = props.niveles
   if (!niveles?.length) return null
 
-  const s = niveles
   const min = Math.min(...niveles)
   const max = Math.max(...niveles)
   const rango = max - min || 1
   const anchoUtil = ANCHO - MARGEN.izquierda - MARGEN.derecha
   const altoUtil = props.alto - MARGEN.arriba - MARGEN.abajo
 
-  const x = (i) => MARGEN.izquierda + (i / (s.length - 1)) * anchoUtil
+  const x = (i) => MARGEN.izquierda + (i / (niveles.length - 1)) * anchoUtil
   const y = (v) => MARGEN.arriba + ((v - min) / rango) * altoUtil
 
   const linea = niveles.map((v, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`)
-  const area = `${linea.join(' ')} L${x(s.length - 1).toFixed(1)},${props.alto - MARGEN.abajo} L${MARGEN.izquierda},${props.alto - MARGEN.abajo} Z`
+  const area = `${linea.join(' ')} L${x(niveles.length - 1).toFixed(1)},${props.alto - MARGEN.abajo} L${MARGEN.izquierda},${props.alto - MARGEN.abajo} Z`
 
   // Tendencia por mínimos cuadrados, expresada luego en m/año.
-  const n = s.length
+  const n = niveles.length
   const sx = (n - 1) / 2
   const sy = niveles.reduce((a, b) => a + b, 0) / n
   let num = 0
