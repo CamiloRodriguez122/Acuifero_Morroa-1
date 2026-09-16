@@ -1,0 +1,84 @@
+@import 'tailwindcss';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+@theme {
+  --color-abismo: #061422;
+  --color-profundo: #0b1f33;
+  --color-pizarra: #12293f;
+  --color-borde: #1e3d58;
+  --color-agua: #38bdf8;
+  --color-agua-claro: #7dd3fc;
+  --color-arena: #d9b382;
+  --color-alerta: #f97362;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-abismo);
+  color: #e2eef8;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbars discretas para los paneles laterales */
+.scroll-fino::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-fino::-webkit-scrollbar-thumb {
+  background: #1e3d58;
+  border-radius: 999px;
+}
+.scroll-fino::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Controles nativos de MapLibre alineados con el tema oscuro */
+.maplibregl-ctrl-group {
+  background: rgba(11, 31, 51, 0.92) !important;
+  border: 1px solid #1e3d58 !important;
+  box-shadow: none !important;
+}
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid #1e3d58 !important;
+}
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(1) brightness(1.4);
+}
+.maplibregl-ctrl-attrib {
+  background: rgba(6, 20, 34, 0.78) !important;
+  font-size: 10px;
+}
+.maplibregl-ctrl-attrib a {
+  color: #7dd3fc !important;
+}
+.maplibregl-popup-content {
+  background: #0b1f33 !important;
+  border: 1px solid #1e3d58;
+  border-radius: 10px;
+  color: #e2eef8;
+  padding: 10px 12px !important;
+  font-size: 12px;
+}
+.maplibregl-popup-tip {
+  border-top-color: #0b1f33 !important;
+  border-bottom-color: #0b1f33 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
