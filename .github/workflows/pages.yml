@@ -2,7 +2,7 @@ name: Publicar en GitHub Pages
 
 on:
   push:
-    branches: [claude/morroa-3d-aquifer-map-cblkq5, main]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
