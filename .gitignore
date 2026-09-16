@@ -5,3 +5,6 @@ dist
 .env.local
 .DS_Store
 *.log
+
+# Capas GeoJSON generadas por scripts/gen-geodata.mjs
+public/data/*.geojson

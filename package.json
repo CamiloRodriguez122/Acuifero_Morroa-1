@@ -5,9 +5,12 @@
   "type": "module",
   "description": "Aplicativo web interactivo para la visualizacion y analisis de datos hidrogeologicos del acuifero Morroa (CECAR, 2026)",
   "scripts": {
+    "predev": "node scripts/gen-geodata.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/gen-geodata.mjs",
     "build": "vite build",
     "preview": "vite preview --port 4173",
+    "datos": "node scripts/gen-geodata.mjs",
     "lint": "eslint . --ext .js,.vue"
   },
   "dependencies": {

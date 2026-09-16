@@ -41,6 +41,7 @@ npm run dev      # servidor de desarrollo
 npm run build    # compila a dist/
 npm run preview  # sirve dist/ en el puerto 4173
 npm run lint     # ESLint (configuración plana) sobre .js y .vue
+npm run datos    # regenera las capas GeoJSON de public/data/
 ```
 
 No requiere llaves de API ni variables de entorno: todas las teselas provienen de servicios
@@ -70,8 +71,8 @@ src/
 └── data/
     ├── formaciones.js             Columna estratigráfica
     └── mapa.js                    Fondos, cámara y municipios
-public/data/                       Capas GeoJSON
-scripts/gen_geodata.py             Genera las capas GeoJSON
+public/data/                       Capas GeoJSON (generadas, no versionadas)
+`scripts/gen-geodata.mjs` regenera los tres archivos; `npm run build` lo ejecuta antes de compilar, por lo que no se versionan.
 ```
 
 ## Datos
@@ -82,7 +83,10 @@ scripts/gen_geodata.py             Genera las capas GeoJSON
 | Zona de recarga | `public/data/zona-recarga.geojson` | Franja de afloramiento de la Fm. Morroa |
 | Pozos y series | `public/data/pozos.geojson` | **Datos de demostración** |
 
-Todo está en WGS84 (EPSG:4326). `scripts/gen_geodata.py` regenera los tres archivos.
+Todo está en WGS84 (EPSG:4326). Las capas son datos derivados: las genera
+`scripts/gen-geodata.mjs` de forma determinista (PRNG con semilla fija) y `npm run build` y
+`npm run dev` lo ejecutan automáticamente, de modo que el repositorio no las versiona. Para
+regenerarlas a mano: `npm run datos`.
 
 ### Límites de los datos actuales
 
