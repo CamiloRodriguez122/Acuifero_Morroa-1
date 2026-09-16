@@ -82,7 +82,7 @@ const resumen = computed(() => {
         <h4 class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
           Serie de nivel estático
         </h4>
-        <GraficoSerie :serie="pozo.serie" />
+        <GraficoSerie :niveles="pozo.niveles" :inicio="pozo.inicio" />
         <dl class="mt-3 grid grid-cols-2 gap-2">
           <div
             v-for="[k, v] in resumen"

@@ -111,14 +111,15 @@ ESTACIONAL = [1.35, 1.55, 1.70, 1.20, -0.45, -0.80, -0.25, -0.60, -1.40, -1.65, 
 
 feats = []
 for cod, nom, mun, lon, lat, prof, cota, ne0, tend in POZOS:
-    serie = []
+    # La serie se guarda como un vector de niveles con su mes inicial: evita
+    # repetir 192 etiquetas de fecha por pozo y reduce el GeoJSON a la mitad.
+    niveles = []
     ruido = 0.0
-    for i, (a, m) in enumerate(MESES):
+    for i, (_, m) in enumerate(MESES):
         t = i / 12.0
         ruido = 0.72 * ruido + random.gauss(0, 0.30)          # persistencia interanual
         ne = ne0 + tend * t + ESTACIONAL[m - 1] * 0.55 + ruido
-        serie.append([f"{a}-{m:02d}", round(ne, 2)])
-    niveles = [v for _, v in serie]
+        niveles.append(round(ne, 2))
     ne_actual = niveles[-1]
     feats.append({
         "type": "Feature",
@@ -133,8 +134,9 @@ for cod, nom, mun, lon, lat, prof, cota, ne0, tend in POZOS:
             "maximo_m": round(max(niveles), 2),
             "promedio_m": round(sum(niveles) / len(niveles), 2),
             "periodo": f"{ANIO_INI}-{ANIO_FIN}",
-            "n_registros": len(serie),
-            "serie": serie,
+            "n_registros": len(niveles),
+            "inicio": f"{ANIO_INI}-01",
+            "niveles": niveles,
             "origen": "demo",
         },
         "geometry": {"type": "Point", "coordinates": [lon, lat]},

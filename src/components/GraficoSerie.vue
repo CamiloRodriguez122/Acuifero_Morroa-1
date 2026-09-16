@@ -2,7 +2,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  serie: { type: Array, required: true },
+  /** Vector de niveles estáticos en metros, un valor por mes. */
+  niveles: { type: Array, required: true },
+  /** Mes del primer valor, en formato AAAA-MM. */
+  inicio: { type: String, required: true },
   alto: { type: Number, default: 120 },
 })
 
@@ -14,10 +17,10 @@ const MARGEN = { arriba: 8, derecha: 6, abajo: 18, izquierda: 34 }
  * nivel estático mayor significa agua más profunda, es decir, peor condición.
  */
 const grafico = computed(() => {
-  const s = props.serie
-  if (!s?.length) return null
+  const niveles = props.niveles
+  if (!niveles?.length) return null
 
-  const niveles = s.map((p) => p[1])
+  const s = niveles
   const min = Math.min(...niveles)
   const max = Math.max(...niveles)
   const rango = max - min || 1
@@ -27,7 +30,7 @@ const grafico = computed(() => {
   const x = (i) => MARGEN.izquierda + (i / (s.length - 1)) * anchoUtil
   const y = (v) => MARGEN.arriba + ((v - min) / rango) * altoUtil
 
-  const linea = s.map((p, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(p[1]).toFixed(1)}`)
+  const linea = niveles.map((v, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`)
   const area = `${linea.join(' ')} L${x(s.length - 1).toFixed(1)},${props.alto - MARGEN.abajo} L${MARGEN.izquierda},${props.alto - MARGEN.abajo} Z`
 
   // Tendencia por mínimos cuadrados, expresada luego en m/año.
@@ -43,15 +46,15 @@ const grafico = computed(() => {
   const m = den ? num / den : 0
   const tendencia = `M${x(0).toFixed(1)},${y(sy - m * sx).toFixed(1)} L${x(n - 1).toFixed(1)},${y(sy + m * sx).toFixed(1)}`
 
-  const anios = s.filter((p, i) => p[0].endsWith('-01') && i % 36 === 0)
-  return {
-    linea: linea.join(' '),
-    area,
-    tendencia,
-    min,
-    max,
-    etiquetasX: anios.map((p) => ({ texto: p[0].slice(0, 4), x: x(s.indexOf(p)) })),
+  // Una etiqueta de año cada tres años, a partir del mes inicial de la serie.
+  const [anioIni, mesIni] = props.inicio.split('-').map(Number)
+  const etiquetasX = []
+  for (let i = 0; i < n; i += 36) {
+    const meses = mesIni - 1 + i
+    etiquetasX.push({ texto: String(anioIni + Math.floor(meses / 12)), x: x(i) })
   }
+
+  return { linea: linea.join(' '), area, tendencia, min, max, etiquetasX }
 })
 </script>
 

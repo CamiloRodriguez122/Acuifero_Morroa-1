@@ -37,7 +37,7 @@ function columnasDePozos(pozos, radio = 900) {
     }
     return {
       type: 'Feature',
-      properties: { ...p.properties, serie: undefined },
+      properties: { ...p.properties, niveles: undefined },
       geometry: { type: 'Polygon', coordinates: [anillo] },
     }
   })
@@ -149,7 +149,16 @@ export function useMapaAcuifero(contenedor, estado, callbacks = {}) {
    * agua (nivel estático): cuanto más alta la columna, más profundo está el
    * agua. La escala es exagerada para que se lea sobre una huella de ~50 km.
    */
-  const alturaPozo = () => ['*', ['get', 'nivel_estatico_m'], estado.escalaPozos.value]
+  const alturaPozo = () => {
+    const k = estado.escalaPozos.value
+    return [
+      '*',
+      ['get', 'nivel_estatico_m'],
+      // La escala baja al acercarse: lo que se lee bien sobre los 50 km de la
+      // huella taparía el terreno a nivel de un municipio.
+      ['interpolate', ['linear'], ['zoom'], 9, k, 13, k * 0.22],
+    ]
+  }
 
   function agregarCapas(m, d) {
     m.addSource('acuifero', { type: 'geojson', data: d.acuifero })
